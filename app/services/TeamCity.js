@@ -50,24 +50,7 @@ module.exports = function () {
           }, callback);
         },
         requestBuilds = function (callback) {
-            //var requestFinishedBuilds = makeRequest.bind(this, getFinishedBuildsUrl());
-            //var requestCanceledBuilds = makeRequest.bind(this, getCanceledBuildsUrl());
-            //var requestRunningBuilds = makeRequest.bind(this, getRunningBuildsUrl());
             var requestTeamCity = makeRequest.bind(this, self.configuration.direct_url);
-
-            /*async.parallel([
-                requestFinishedBuilds,
-                requestRunningBuilds,
-                requestCanceledBuilds
-            ], function (error, data) {
-                if (error) {
-                  callback(error);
-                  return;
-                }
-
-                var merged = selectMany(data, function (x) { return x.build || []; });
-                callback(error, merged);
-            });*/
             async.parallel([
                 requestTeamCity
             ], function (error, data) {
