@@ -50,21 +50,25 @@ module.exports = function () {
           }, callback);
         },
         requestBuilds = function (callback) {
-            var requestFinishedBuilds = makeRequest.bind(this, getFinishedBuildsUrl());
-            var requestCanceledBuilds = makeRequest.bind(this, getCanceledBuildsUrl());
-            var requestRunningBuilds = makeRequest.bind(this, getRunningBuildsUrl());
-
+            var requestTeamCity = makeRequest.bind(this, self.configuration.direct_url);
             async.parallel([
-                requestFinishedBuilds,
-                requestRunningBuilds,
-                requestCanceledBuilds
+                requestTeamCity
             ], function (error, data) {
                 if (error) {
                   callback(error);
                   return;
                 }
-
-                var merged = selectMany(data, function (x) { return x.build || []; });
+                config_data = [];
+                for (i in data[0].buildType) {
+                    if (data[0].buildType[i].id == self.configuration.buildConfigurationId) {
+                        config_data = data[0].buildType[i].builds;
+                        break;
+                    }
+                }
+                var merged = [];
+                if (!(Object.keys(config_data).length === 0)) {
+                    merged = config_data["build"];
+                }
                 callback(error, merged);
             });
         },
@@ -171,7 +175,9 @@ module.exports = function () {
     self.configure = function (config) {
         self.configuration = config;
     };
-
+    self.add_direct_url = function (direct_url) {
+        self.configuration["direct_url"] = direct_url;
+    }
     self.check = function (callback) {
         queryBuilds(callback);
     };
