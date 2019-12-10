@@ -96,6 +96,8 @@ for (var i = 0; i < config.services.length; i++) {
         service = new (require('./services/' + serviceConfig.name))();
 
     service.configure(tryExpandEnvironmentVariables(config.monitor, serviceConfig.configuration));
+    //Example
+    //direct_url = "httpAuth/app/rest/buildTypes?locator=affectedProject:(id:DeployBuilds)&fields=buildType(id,name,help,all,builds($locator(running:false,canceled:false,count:100,branch:unspecified:any),build(number,status,statusText,href)))"
     service.add_direct_url(config.monitor.direct_url);
     monitor.watchOn(service);
 }
